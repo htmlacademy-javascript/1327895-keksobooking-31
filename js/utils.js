@@ -16,4 +16,9 @@ const getRandomSubarray = (array, min, max) => {
   return subarray;
 };
 
-export { getRandomSubarray };
+const removeElements = (removedElements) => {
+  const elementsToRemove = document.querySelectorAll(removedElements);
+  elementsToRemove.forEach((element) => element.remove());
+};
+
+export { getRandomNumber, getRandomArrayElement, getRandomSubarray, removeElements};
