@@ -105,7 +105,7 @@ const createId = () => {
 const createIdAvatar = createId();
 
 const createAdvertisement = () => ({
-  autor: {
+  author: {
     avatar: `img/avatars/user${((createIdAvatar() % 10) + 1).toString().padStart(2, '0')}.png`,
   },
   offer: createOffer(),

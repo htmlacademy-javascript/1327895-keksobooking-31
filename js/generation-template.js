@@ -1,5 +1,3 @@
-import { removeElements } from './utils.js';
-
 const temlateCard = document.querySelector('#card').content.querySelector('.popup');
 const mapCanvas = document.querySelector('#map-canvas');
 
@@ -52,6 +50,7 @@ const generatePopup = (data) => {
     const capacityElement = popupElement.querySelector('.popup__text--capacity');
     const featuresList = popupElement.querySelector('.popup__features');
     const descriptionElement = popupElement.querySelector('.popup__description');
+    const photosElement = popupElement.querySelector('.popup__photos');
     const avatarElement = popupElement.querySelector('.popup__avatar');
 
     titleElement.textContent = offer.title;
@@ -63,23 +62,20 @@ const generatePopup = (data) => {
 
     renderFeatures(featuresList, offer.features);
 
-    removeElements('.popup__description');
+    descriptionElement.innerHTML = '';
+
     if (offer.description) {
       descriptionElement.textContent = offer.description;
     } else {
       descriptionElement.classList.add('hidden');
     }
 
-    removeElements('.popup__photos .popup__photo');
-    if (offer.photos) {
-      renderPhotos.textContent = offer.photos;
-    } else {
-      renderPhotos.classList.add('hidden');
-    }
+    photosElement.innerHTML = '';
+    renderPhotos(photosElement, offer.photos);
 
     avatarElement.src = author.avatar;
 
-    popupElement.appendChild(popupElement);
+    popapFragment.appendChild(popupElement);
   });
 
   mapCanvas.appendChild(popapFragment);
