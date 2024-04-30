@@ -9,11 +9,8 @@ const getRandomArrayElement = (elements) => elements[getRandomNumber(0, elements
 
 const getRandomSubarray = (array, min, max) => {
   const count = getRandomNumber(min, max);
-  const subarray = [];
-  for (let i = 0; i < count; i++) {
-    subarray.push(getRandomArrayElement(array));
-  }
-  return subarray;
+  const shuffledArray = [...array].sort(() => 0.5 - Math.random());
+  return shuffledArray.slice(0, count);
 };
 
 export { getRandomNumber, getRandomArrayElement, getRandomSubarray};

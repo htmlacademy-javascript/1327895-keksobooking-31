@@ -60,10 +60,10 @@ const generatePopup = (data) => {
     capacityElement.textContent = `${offer.rooms} комнаты для ${offer.guests} гостей`;
     timeElement.textContent = `Заезд после ${offer.checkin}, выезд до ${offer.checkout}`;
 
+    featuresList.innerHTML = '';
     renderFeatures(featuresList, offer.features);
 
     descriptionElement.innerHTML = '';
-
     if (offer.description) {
       descriptionElement.textContent = offer.description;
     } else {
