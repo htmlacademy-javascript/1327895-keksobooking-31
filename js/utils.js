@@ -5,6 +5,15 @@ const getRandomNumber = (minValue, maxValue) => {
   return Math.floor(result);
 };
 
+const getRandomFractionNumber = (minValue, maxValue, precision = 5) => {
+  const lower = Math.min(minValue, maxValue);
+  const upper = Math.max(minValue, maxValue);
+  const range = upper - lower;
+
+  const randomNumber = Math.random() * range + lower;
+  return randomNumber.toFixed(precision);
+};
+
 const getRandomArrayElement = (elements) => elements[getRandomNumber(0, elements.length - 1)];
 
 const getRandomSubarray = (array, min, max) => {
@@ -13,4 +22,4 @@ const getRandomSubarray = (array, min, max) => {
   return shuffledArray.slice(0, count);
 };
 
-export { getRandomNumber, getRandomArrayElement, getRandomSubarray};
+export { getRandomNumber, getRandomArrayElement, getRandomSubarray, getRandomFractionNumber};

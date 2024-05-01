@@ -1,4 +1,4 @@
-import { getRandomNumber, getRandomArrayElement,getRandomSubarray } from './utils.js';
+import { getRandomNumber, getRandomArrayElement,getRandomSubarray, getRandomFractionNumber } from './utils.js';
 
 const NUMBER_ADS = 10;
 
@@ -74,8 +74,8 @@ const DESCRIPTION = [
   'Горный стиль номера с деревянными балками и камином'
 ];
 
-const lat = getRandomNumber(LAT_MIN, LAT_MAX).toFixed(5);
-const lng = getRandomNumber(LNG_MIN, LNG_MAX).toFixed(5);
+const lat = getRandomFractionNumber(LAT_MIN, LAT_MAX);
+const lng = getRandomFractionNumber(LNG_MIN, LNG_MAX);
 
 const createOffer = () => ({
   title: getRandomArrayElement(TITLE),

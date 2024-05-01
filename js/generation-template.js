@@ -28,18 +28,10 @@ const renderFeatures = (featuresList, features) => {
   });
 };
 
-const renderPhotos = (photosElement, photos) => {
-  photos.forEach((photo) => {
-    const img = document.createElement('img');
-    img.src = photo;
-    photosElement.appendChild(img);
-  });
-};
-
 const generatePopup = (data) => {
-  const popapFragment = document.createDocumentFragment();
+  const popupFragment = document.createDocumentFragment();
 
-  data.forEach(({author, offer}) => {
+  [data[0]].forEach(({author, offer}) => {
     const popupElement = temlateCard.cloneNode(true);
 
     const titleElement = popupElement.querySelector('.popup__title');
@@ -51,6 +43,7 @@ const generatePopup = (data) => {
     const featuresList = popupElement.querySelector('.popup__features');
     const descriptionElement = popupElement.querySelector('.popup__description');
     const photosElement = popupElement.querySelector('.popup__photos');
+    const photoElement = photosElement.querySelector('.popup__photo');
     const avatarElement = popupElement.querySelector('.popup__avatar');
 
     titleElement.textContent = offer.title;
@@ -71,14 +64,19 @@ const generatePopup = (data) => {
     }
 
     photosElement.innerHTML = '';
-    renderPhotos(photosElement, offer.photos);
+
+    offer.photos.forEach((photo) => {
+      const photoClone = photoElement.cloneNode(true);
+      photoClone.src = photo;
+      photosElement.appendChild(photoClone);
+    });
 
     avatarElement.src = author.avatar;
 
-    popapFragment.appendChild(popupElement);
+    popupFragment.appendChild(popupElement);
   });
 
-  mapCanvas.appendChild(popapFragment);
+  mapCanvas.appendChild(popupFragment);
 };
 
 export { generatePopup };
