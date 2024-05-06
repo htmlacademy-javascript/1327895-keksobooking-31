@@ -74,12 +74,9 @@ const DESCRIPTION = [
   'Горный стиль номера с деревянными балками и камином'
 ];
 
-const lat = getRandomFractionNumber(LAT_MIN, LAT_MAX);
-const lng = getRandomFractionNumber(LNG_MIN, LNG_MAX);
-
 const createOffer = () => ({
   title: getRandomArrayElement(TITLE),
-  address: `${lat}, ${lng}`,
+  address: `${getRandomFractionNumber(LAT_MIN, LAT_MAX)}, ${getRandomFractionNumber(LNG_MIN, LNG_MAX)}`,
   price: getRandomNumber(MIN_PRICE, MAX_PRICE),
   type: getRandomArrayElement(TYPE),
   rooms: getRandomNumber(MIN_COUNT_ROOMS, MAX_COUNT_ROOMS),
@@ -106,7 +103,10 @@ const createAdvertisement = () => ({
     avatar: `img/avatars/user${((createIdAvatar() % 10) + 1).toString().padStart(2, '0')}.png`,
   },
   offer: createOffer(),
-  location: `${lat}, ${lng}`,
+  location: {
+    lat: getRandomFractionNumber(LAT_MIN, LAT_MAX),
+    lng: getRandomFractionNumber(LNG_MIN, LNG_MAX),
+  },
 });
 
 const generateArray = () => {

@@ -5,13 +5,13 @@ const getRandomNumber = (minValue, maxValue) => {
   return Math.floor(result);
 };
 
-const getRandomFractionNumber = (minValue, maxValue, precision = 5) => {
+const getRandomFractionNumber = (minValue, maxValue) => {
   const lower = Math.min(minValue, maxValue);
   const upper = Math.max(minValue, maxValue);
   const range = upper - lower;
 
   const randomNumber = Math.random() * range + lower;
-  return randomNumber.toFixed(precision);
+  return randomNumber.toFixed(5);
 };
 
 const getRandomArrayElement = (elements) => elements[getRandomNumber(0, elements.length - 1)];
