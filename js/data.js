@@ -1,4 +1,4 @@
-import { getRandomNumber, getRandomArrayElement,getRandomSubarray } from './utils.js';
+import { getRandomNumber, getRandomArrayElement,getRandomSubarray, getRandomFractionNumber } from './utils.js';
 
 const NUMBER_ADS = 10;
 
@@ -74,15 +74,9 @@ const DESCRIPTION = [
   'Горный стиль номера с деревянными балками и камином'
 ];
 
-const createLatMin = () => getRandomNumber(LAT_MIN, LAT_MAX).toFixed(5);
-const createLatMax = () => getRandomNumber(LNG_MIN, LNG_MAX).toFixed(5);
-
 const createOffer = () => ({
   title: getRandomArrayElement(TITLE),
-  address: {
-    lat: createLatMin(),
-    lng: createLatMax(),
-  },
+  address: `${getRandomFractionNumber(LAT_MIN, LAT_MAX)}, ${getRandomFractionNumber(LNG_MIN, LNG_MAX)}`,
   price: getRandomNumber(MIN_PRICE, MAX_PRICE),
   type: getRandomArrayElement(TYPE),
   rooms: getRandomNumber(MIN_COUNT_ROOMS, MAX_COUNT_ROOMS),
@@ -105,13 +99,13 @@ const createId = () => {
 const createIdAvatar = createId();
 
 const createAdvertisement = () => ({
-  autor: {
+  author: {
     avatar: `img/avatars/user${((createIdAvatar() % 10) + 1).toString().padStart(2, '0')}.png`,
   },
   offer: createOffer(),
   location: {
-    lat: createLatMin(),
-    lng: createLatMax(),
+    lat: getRandomFractionNumber(LAT_MIN, LAT_MAX),
+    lng: getRandomFractionNumber(LNG_MIN, LNG_MAX),
   },
 });
 
