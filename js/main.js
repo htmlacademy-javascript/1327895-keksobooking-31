@@ -1,7 +1,10 @@
 import { generateArray } from './data.js';
 import { generatePopup } from './generation-template.js';
-import { inactiveForm } from './form.js';
+import { inactiveAdForm, inactiveMap, activateAdForm, activateMap } from './form.js';
 
 generatePopup(generateArray()[0]);
-inactiveForm();
+inactiveAdForm();
+inactiveMap();
+activateAdForm();
+activateMap();
 
