@@ -5,7 +5,7 @@ const NUMBER_ADS = 10;
 const MAX_COUNT_PHOTO = 3;
 
 const MIN_PRICE = 3000;
-const MAX_PRICE = 10000;
+const MAX_PRICE = 100000;
 
 const MAX_COUNT_FEATURES = 6;
 
