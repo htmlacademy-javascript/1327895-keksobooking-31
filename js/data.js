@@ -1,5 +1,6 @@
 import { getRandomNumber, getRandomArrayElement,getRandomSubarray, getRandomFractionNumber } from './utils.js';
 
+const NUMBER_ADS = 10;
 const MAX_COUNT_PHOTO = 3;
 
 const MIN_PRICE = 3000;
@@ -107,14 +108,14 @@ const generateDataPopup = () => ({
   },
 });
 
-// const generateArray = () => {
-//   const array = [];
-//   for (let i = 0; i < NUMBER_ADS; i++) {
-//     array.push(generateDataPopup(i));
-//   }
-//   return array;
-// };
+const generateArray = () => {
+  const array = [];
+  for (let i = 0; i < NUMBER_ADS; i++) {
+    array.push(generateDataPopup(i));
+  }
+  return array;
+};
 
 // export { generateDataPopup };
-export { generateDataPopup };
+export { generateDataPopup, generateArray};
 

@@ -1,11 +1,11 @@
-// import { generateDataPopup } from './data.js';
+import { generateArray } from './data.js';
 // import { generatePopup } from './generation-template.js';
 import { inactiveAdForm, inactiveMap, activateAdForm, activateMap } from './form.js';
 import { renderMap } from './map.js';
-// generatePopup( generateDataPopup()[0]);
+// generatePopup(generateDataPopup());
 inactiveAdForm();
 inactiveMap();
-activateAdForm();
+// activateAdForm();
 activateMap();
-renderMap();
+renderMap(generateArray(), activateAdForm);
 

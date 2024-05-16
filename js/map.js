@@ -1,11 +1,10 @@
-import { generateDataPopup } from './data.js';
+// import { generateDataPopup } from './data.js';
 import { generatePopup } from './generation-template.js';
 
 const TILE_LAYER = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 const COPYRIGHT = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
 
 const ZOOM = 10;
-const COUNT_CONTS = 10;
 
 const TOKIO_CENTER = {
   lat: 35.6895,
@@ -28,6 +27,18 @@ const configIcon = {
   anchorY: 52,
 };
 
+const pinIcon = L.icon({
+  iconUrl:configIcon.url,
+  iconSize: [configIcon.width, configIcon.height],
+  iconAnchor: [configIcon.anchorX, configIcon.anchorY],
+});
+
+const pinMainIcon = L.icon({
+  iconUrl:configMainIcon.url,
+  iconSize: [configMainIcon.width, configMainIcon.height],
+  iconAnchor: [configMainIcon.anchorX, configMainIcon.anchorY],
+});
+
 const adFormAddress = document.querySelector('#address');
 
 const renderMap = (points, onMapLoad) => {
@@ -37,21 +48,9 @@ const renderMap = (points, onMapLoad) => {
     })
     .setView(TOKIO_CENTER, ZOOM);
 
-  L.titleLayer(TILE_LAYER, {
-    attrbution: COPYRIGHT,
+  L.tileLayer(TILE_LAYER, {
+    attribution: COPYRIGHT,
   }).addTo(map);
-
-  const pinIcon = L.icon({
-    iconUrl:configIcon.url,
-    iconSize: [configIcon.width, configIcon.height],
-    iconAnchor: [configIcon.anchorX, configIcon.anchorY],
-  });
-
-  const pinMainIcon = L.icon({
-    iconUrl:configMainIcon.url,
-    iconSize: [configMainIcon.width, configMainIcon.height],
-    iconAnchor: [configMainIcon.anchorX, configMainIcon.anchorY],
-  });
 
   points.forEach((data) => {
     const pinMarker = L.marker({
@@ -59,7 +58,7 @@ const renderMap = (points, onMapLoad) => {
       lng: data.location.lng,
     },
     {
-      draggable: true,
+      draggable: false,
       icon: pinIcon,
     });
 
