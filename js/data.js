@@ -1,7 +1,5 @@
 import { getRandomNumber, getRandomArrayElement,getRandomSubarray, getRandomFractionNumber } from './utils.js';
 
-const NUMBER_ADS = 10;
-
 const MAX_COUNT_PHOTO = 3;
 
 const MIN_PRICE = 3000;
@@ -98,7 +96,7 @@ const createId = () => {
 
 const createIdAvatar = createId();
 
-const createAdvertisement = () => ({
+const generateDataPopup = () => ({
   author: {
     avatar: `img/avatars/user${((createIdAvatar() % 10) + 1).toString().padStart(2, '0')}.png`,
   },
@@ -109,12 +107,14 @@ const createAdvertisement = () => ({
   },
 });
 
-const generateArray = () => {
-  const array = [];
-  for (let i = 0; i < NUMBER_ADS; i++) {
-    array.push(createAdvertisement(i));
-  }
-  return array;
-};
+// const generateArray = () => {
+//   const array = [];
+//   for (let i = 0; i < NUMBER_ADS; i++) {
+//     array.push(generateDataPopup(i));
+//   }
+//   return array;
+// };
 
-export { generateArray };
+// export { generateDataPopup };
+export { generateDataPopup };
+
