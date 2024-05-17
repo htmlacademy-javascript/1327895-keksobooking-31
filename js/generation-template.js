@@ -73,7 +73,7 @@ const generatePopup = ({author, offer}) => {
 
   popupFragment.appendChild(popupElement);
 
-  mapCanvas.appendChild(popupFragment);
+  return popupFragment;
 };
 
 export { generatePopup };

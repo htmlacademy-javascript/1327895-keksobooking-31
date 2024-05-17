@@ -1,6 +1,7 @@
 const MIN_COUNT_TITLE_CHARACTERS = 30;
 const MAX_COUNT_TITLE_CHARACTERS = 100;
 const MAX_PRICE = 100000;
+const MIN_PRICE = 0;
 
 const MIN_PRICE_RESIDENCY = {
   'bungalow': 0,
@@ -25,6 +26,9 @@ const adFormCapacity = document.querySelector('#capacity');
 const adFormHousingType = document.querySelector('#type');
 const adFormTimeIn = document.querySelector('#timein');
 const adFormTimeOut = document.querySelector('#timeout');
+
+const adFormSlider = document.querySelector('.ad-form__slider');
+
 
 const inactiveAdForm = () => {
   adForm.classList.add('ad-form--disabled');
@@ -131,16 +135,43 @@ adFormTimeOut.addEventListener('change', () => {
   adFormTimeIn.value = adFormTimeOut.value;
 });
 
+noUiSlider.create(adFormSlider, {
+  range: {
+    min: MIN_PRICE,
+    max: MAX_PRICE,
+  },
+  start: 0,
+  step: 1,
+  connect: 'lower',
+});
+
+adFormSlider.noUiSlider.on('slide', () => {
+  adFormPrice.value = adFormSlider.noUiSlider.get();
+  pristine.validate(adFormPrice);
+});
+
+adFormPrice.addEventListener('change', (evt) => {
+  if (adFormPrice.value > MAX_PRICE) {
+    adFormSlider.noUiSlider.reset();
+  }
+  adFormSlider.noUiSlider.set(evt.target.value);
+});
+
+const resetAdFormSlider = () => {
+  adFormSlider.noUiSlider.set(MIN_PRICE);
+};
+
+
 adForm.addEventListener('submit', (evt) => {
   evt.preventDefault();
   const isValid = pristine.validate();
 
   if (isValid) {
-    evt.preventDefault();
-    inactiveAdForm();
-    inactiveMap();
+    // evt.preventDefault();
+    // inactiveAdForm();
+    // inactiveMap();
   } else {
-    return activateAdForm(), activateMap();
+    // return activateAdForm(), activateMap();
   }
 });
 
