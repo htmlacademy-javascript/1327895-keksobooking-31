@@ -1,5 +1,5 @@
 const temlateCard = document.querySelector('#card').content.querySelector('.popup');
-const mapCanvas = document.querySelector('#map-canvas');
+// const mapCanvas = document.querySelector('#map-canvas');
 
 const housingLabels = {
   flat: 'Квартира',

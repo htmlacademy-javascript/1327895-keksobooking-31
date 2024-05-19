@@ -62,9 +62,9 @@ const renderMap = (points, onMapLoad) => {
       icon: pinIcon,
     });
 
-    pinMarker.on('moveend', (evt) => {
-      console.log(evt.target.getLatLng());
-    });
+    // pinMarker.on('moveend', (evt) => {
+    //   console.log(evt.target.getLatLng());
+    // });
 
     const popup = generatePopup(data);
     pinMarker.addTo(map).bindPopup(popup);
@@ -89,5 +89,5 @@ const renderMap = (points, onMapLoad) => {
   mainPinMarker.addTo(map);
 };
 
-export { renderMap };
+export { renderMap, adFormAddress };
 

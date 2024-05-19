@@ -1,3 +1,5 @@
+import { isEscapeKey } from './utils.js';
+
 const MIN_COUNT_TITLE_CHARACTERS = 30;
 const MAX_COUNT_TITLE_CHARACTERS = 100;
 const MAX_PRICE = 100000;
@@ -77,7 +79,6 @@ pristine.addValidator(adFormTitle, isValidTitle, `Введите от ${MIN_COUN
 let errorMessage = '';
 
 const isValidPrice = (value) => {
-
   if (value > MAX_PRICE) {
     errorMessage = `Максимальная цена не более ${MAX_PRICE}`;
     return false;
@@ -90,7 +91,7 @@ const isValidPrice = (value) => {
   return true;
 };
 
-pristine.addValidator(adFormPrice, isValidPrice, errorMessage);
+pristine.addValidator(adFormPrice, isValidPrice, () => errorMessage);
 
 const onChangeHousingType = () => {
   adFormPrice.placeholder = MIN_PRICE_RESIDENCY[adFormHousingType.value];
