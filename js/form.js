@@ -144,10 +144,19 @@ noUiSlider.create(adFormSlider, {
   start: 0,
   step: 1,
   connect: 'lower',
+  format: {
+    to: (value) => value.toFixed(0),
+    from: (value) => parseFloat(value),
+  }
 });
 
 adFormSlider.noUiSlider.on('slide', () => {
   adFormPrice.value = adFormSlider.noUiSlider.get();
+  pristine.validate(adFormPrice);
+});
+
+adFormPrice.addEventListener('input', (evt) => {
+  adFormSlider.noUiSlider.set(evt.target.value);
   pristine.validate(adFormPrice);
 });
 
