@@ -3,7 +3,7 @@
 import { inactiveAdForm, inactiveMap, activateAdForm, activateMap } from './form.js';
 import { renderMap } from './map.js';
 import { getData } from './api.js';
-// import { getErrorMessage } from './utils.js';
+import { getErrorMessage } from './utils.js';
 
 inactiveAdForm();
 inactiveMap();
@@ -13,7 +13,7 @@ const bootstrappApp = async () => {
     activateMap();
     renderMap(popups, activateAdForm);
   } catch (error) {
-    // getErrorMessage(error.message);
+    getErrorMessage(error.message);
   }
 };
 

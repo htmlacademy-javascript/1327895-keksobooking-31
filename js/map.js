@@ -89,5 +89,12 @@ const renderMap = (points, onMapLoad) => {
   mainPinMarker.addTo(map);
 };
 
-export { renderMap, adFormAddress };
+const resetPinMarker = (address) => {
+  map.setView(TOKIO_CENTER, ZOOM);
+  mainPinMarker.setLatLng(TOKIO_CENTER);
+  address.value = `${Object.values(TOKIO_CENTER)[0].toFixed(5)}, ${Object.values(TOKIO_CENTER)[1].toFixed(5)}`;
+};
+
+
+export { renderMap, adFormAddress, resetPinMarker };
 

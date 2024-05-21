@@ -1,17 +1,17 @@
 const DEBOUNCE_DELAY = 500;
 
-// const errorLoadDataTemplate = document.querySelector('#data-error').content;
+const errorLoadDataTemplate = document.querySelector('#data-error').content;
 
-// const body = document.body;
+const body = document.body;
 
-// const getErrorMessage = (message) => {
-//   const errorArea = errorLoadDataTemplate.cloneNode(true);
-//   if (message) {
-//     errorArea.querySelector('.data-error__message').textContent = message;
-//   }
+const getErrorMessage = (message) => {
+  const errorArea = errorLoadDataTemplate.cloneNode(true);
+  if (message) {
+    errorArea.querySelector('.data-error__message').textContent = message;
+  }
 
-//   body.append(errorArea);
-// };
+  body.append(errorArea);
+};
 
 const sendErrorMessage = () => {
   const templateSendErrorAlert = document.querySelector('#error').content;
@@ -67,8 +67,6 @@ const debounce = (callback, timeoutDelay = DEBOUNCE_DELAY) => {
   };
 };
 
-export { isEscapeKey, sendErrorMessage, sendMessage, debounce };
+export { isEscapeKey, getErrorMessage, sendErrorMessage, sendMessage, debounce };
 
-
-// export { getRandomNumber, getRandomArrayElement, getRandomSubarray, getRandomFractionNumber, isEscapeKey};
 

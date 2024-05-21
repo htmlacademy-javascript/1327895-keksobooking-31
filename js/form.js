@@ -1,4 +1,5 @@
 import { isEscapeKey } from './utils.js';
+import { resetPinMarker } from './map.js'
 
 const MIN_COUNT_TITLE_CHARACTERS = 30;
 const MAX_COUNT_TITLE_CHARACTERS = 100;
@@ -13,24 +14,28 @@ const MIN_PRICE_RESIDENCY = {
   'palace': 10000,
 };
 
+const SubmitButtonText = {
+  IDLE: 'Опубликовать',
+  SENDING: 'Публикую...'
+};
+
 const adForm = document.querySelector('.ad-form');
 const adFormHeader = adForm.querySelector('.ad-form-header');
 const adFormElement = adForm.querySelectorAll('.ad-form__element');
+const adFormTitle = adForm.querySelector('#title');
+const adFormAddress = adForm.querySelector('#address');
+const adFormPrice = adForm.querySelector('#price');
+const adFormRoomNumber = adForm.querySelector('#room_number');
+const adFormCapacity = adForm.querySelector('#capacity');
+const adFormHousingType = adForm.querySelector('#type');
+const adFormTimeIn = adForm.querySelector('#timein');
+const adFormTimeOut = adForm.querySelector('#timeout');
+const adFormSlider = adForm.querySelector('.ad-form__slider');
+const submitButton = adForm.querySelector('.ad-form__submit');
 
 const mapFilters = document.querySelector('.map__filters');
 const mapFilterElement = mapFilters.querySelectorAll('.map__filter');
 const mapFeature = mapFilters.querySelector('.map__features');
-
-const adFormTitle = document.querySelector('#title');
-const adFormPrice = document.querySelector('#price');
-const adFormRoomNumber = document.querySelector('#room_number');
-const adFormCapacity = document.querySelector('#capacity');
-const adFormHousingType = document.querySelector('#type');
-const adFormTimeIn = document.querySelector('#timein');
-const adFormTimeOut = document.querySelector('#timeout');
-
-const adFormSlider = document.querySelector('.ad-form__slider');
-
 
 const inactiveAdForm = () => {
   adForm.classList.add('ad-form--disabled');
@@ -171,18 +176,35 @@ const resetAdFormSlider = () => {
   adFormSlider.noUiSlider.set(MIN_PRICE);
 };
 
+const resetAdForm = () => {
+  adForm.reset();
+  resetAdFormSlider();
+  resetPinMarker();
+};
 
-adForm.addEventListener('submit', (evt) => {
-  evt.preventDefault();
-  const isValid = pristine.validate();
+const blockSubmitButton = () => {
+  submitButton.disabled = true;
+  submitButton.textContent = SubmitButtonText.SENDING;
+};
 
-  if (isValid) {
-    // evt.preventDefault();
+const unblockSubmitButton = () => {
+  submitButton.disabled = false;
+  submitButton.textContent = SubmitButtonText.IDLE;
+};
+
+const setFormSubmit = () => {
+  adForm.addEventListener('submit', (evt) => {
+    evt.preventDefault();
+
+    const isValid = pristine.validate();
+
+    if (isValid) {
     // inactiveAdForm();
     // inactiveMap();
-  } else {
+    } else {
     // return activateAdForm(), activateMap();
-  }
-});
+    }
+  });
+};
 
 export { inactiveAdForm, inactiveMap, activateAdForm, activateMap };
