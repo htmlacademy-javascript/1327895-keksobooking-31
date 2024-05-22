@@ -1,5 +1,6 @@
-import { isEscapeKey } from './utils.js';
-import { resetPinMarker } from './map.js'
+import { isEscapeKey, sendErrorMessage, sendMessage } from './utils.js';
+import { resetPinMarker } from './map.js';
+import { sendData } from './api.js';
 
 const MIN_COUNT_TITLE_CHARACTERS = 30;
 const MAX_COUNT_TITLE_CHARACTERS = 100;
@@ -23,7 +24,6 @@ const adForm = document.querySelector('.ad-form');
 const adFormHeader = adForm.querySelector('.ad-form-header');
 const adFormElement = adForm.querySelectorAll('.ad-form__element');
 const adFormTitle = adForm.querySelector('#title');
-const adFormAddress = adForm.querySelector('#address');
 const adFormPrice = adForm.querySelector('#price');
 const adFormRoomNumber = adForm.querySelector('#room_number');
 const adFormCapacity = adForm.querySelector('#capacity');
@@ -197,14 +197,17 @@ const setFormSubmit = () => {
     evt.preventDefault();
 
     const isValid = pristine.validate();
-
     if (isValid) {
-    // inactiveAdForm();
-    // inactiveMap();
-    } else {
-    // return activateAdForm(), activateMap();
+      blockSubmitButton();
+      pristine.reset();
+      sendData(new FormData(evt.target))
+        .then(sendMessage, resetAdForm)
+        .catch(sendErrorMessage)
+        .finally(() => {
+          unblockSubmitButton();
+        });
     }
   });
 };
 
-export { inactiveAdForm, inactiveMap, activateAdForm, activateMap };
+export { inactiveAdForm, inactiveMap, activateAdForm, activateMap, setFormSubmit };

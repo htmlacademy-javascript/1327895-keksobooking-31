@@ -4,6 +4,8 @@ const errorLoadDataTemplate = document.querySelector('#data-error').content;
 
 const body = document.body;
 
+const isEscapeKey = (evt) => evt.key === 'Escape';
+
 const getErrorMessage = (message) => {
   const errorArea = errorLoadDataTemplate.cloneNode(true);
   if (message) {
@@ -56,8 +58,6 @@ const sendMessage = () => {
     }
   });
 };
-
-const isEscapeKey = (evt) => evt.key === 'Escape';
 
 const debounce = (callback, timeoutDelay = DEBOUNCE_DELAY) => {
   let timeoutId;
