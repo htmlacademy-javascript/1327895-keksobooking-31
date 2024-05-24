@@ -1,4 +1,5 @@
-import { isEscapeKey, sendErrorMessage, sendMessage } from './utils.js';
+import { isEscapeKey } from './utils.js';
+import { sendErrorMessage, sendMessage } from './messages.js';
 import { resetPinMarker } from './map.js';
 import { sendData } from './api.js';
 
@@ -55,18 +56,18 @@ const inactiveMap = () => {
 
 const activateAdForm = () => {
   adForm.classList.remove('ad-form--disabled');
-  adFormHeader.removeAttribute('disabled', true);
+  adFormHeader.removeAttribute('disabled');
   adFormElement.forEach((element) => {
-    element.removeAttribute('disabled', true);
+    element.removeAttribute('disabled');
   });
 };
 
 const activateMap = () => {
   mapFilters.classList.remove('map__filters--disabled');
   mapFilterElement.forEach((element) => {
-    element.removeAttribute('disabled', true);
+    element.removeAttribute('disabled');
   });
-  mapFeature.removeAttribute('disabled', true);
+  mapFeature.removeAttribute('disabled');
 };
 
 const pristine = new Pristine(adForm, {
@@ -110,7 +111,7 @@ const isValidRoomNumber = (value) => {
     case '1':
       return adFormCapacity.value === '1';
     case '2':
-      return adFormCapacity.value === '2' || adFormCapacity.value === '1' ;
+      return adFormCapacity.value === '2' || adFormCapacity.value === '1';
     case '3':
       return adFormCapacity.value === '3' || adFormCapacity.value === '2' || adFormCapacity.value === '1';
     case '100':
@@ -166,7 +167,7 @@ adFormPrice.addEventListener('input', (evt) => {
 });
 
 adFormPrice.addEventListener('change', (evt) => {
-  if (adFormPrice.value > MAX_PRICE) {
+  if (evt.target.value > MAX_PRICE) {
     adFormSlider.noUiSlider.reset();
   }
   adFormSlider.noUiSlider.set(evt.target.value);
@@ -199,9 +200,10 @@ const setFormSubmit = () => {
     const isValid = pristine.validate();
     if (isValid) {
       blockSubmitButton();
+      sendMessage();
       pristine.reset();
       sendData(new FormData(evt.target))
-        .then(sendMessage, resetAdForm)
+        .then(resetAdForm)
         .catch(sendErrorMessage)
         .finally(() => {
           unblockSubmitButton();

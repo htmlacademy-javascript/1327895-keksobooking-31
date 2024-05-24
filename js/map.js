@@ -4,6 +4,7 @@ import { generatePopup } from './generation-template.js';
 const TILE_LAYER = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 const COPYRIGHT = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
 
+const MAX_COUNT_ADVERTISEMENT = 10;
 const ZOOM = 10;
 
 const TOKIO_CENTER = {
@@ -39,10 +40,22 @@ const pinMainIcon = L.icon({
   iconAnchor: [configMainIcon.anchorX, configMainIcon.anchorY],
 });
 
-const adFormAddress = document.querySelector('#address');
+const mainPinMarker = L.marker(
+  {
+    lat: TOKIO_CENTER.lat,
+    lng: TOKIO_CENTER.lng,
+  },
+  {
+    draggable: true,
+    icon: pinMainIcon,
+  }
+);
 
+const adFormAddress = document.querySelector('#address');
+const map = L.map('map-canvas');
+let initialPoints = [];
 const renderMap = (points, onMapLoad) => {
-  const map = L.map('map-canvas')
+  map
     .on('load', () => {
       onMapLoad();
     })
@@ -52,7 +65,9 @@ const renderMap = (points, onMapLoad) => {
     attribution: COPYRIGHT,
   }).addTo(map);
 
-  points.forEach((data) => {
+  initialPoints = points.slice(0, MAX_COUNT_ADVERTISEMENT);
+
+  initialPoints.forEach((data) => {
     const pinMarker = L.marker({
       lat: data.location.lat,
       lng: data.location.lng,
@@ -70,16 +85,7 @@ const renderMap = (points, onMapLoad) => {
     pinMarker.addTo(map).bindPopup(popup);
   });
 
-  const mainPinMarker = L.marker(
-    {
-      lat: TOKIO_CENTER.lat,
-      lng: TOKIO_CENTER.lng,
-    },
-    {
-      draggable: true,
-      icon: pinMainIcon,
-    }
-  );
+  adFormAddress.value = `${Object.values(TOKIO_CENTER)[0].toFixed(5)}, ${Object.values(TOKIO_CENTER)[1].toFixed(5)}`;
 
   mainPinMarker.on('moveend', (evt) => {
     const coords = evt.target.getLatLng();
