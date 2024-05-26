@@ -3,6 +3,7 @@ import { isEscapeKey } from './utils.js';
 const errorLoadDataTemplate = document.querySelector('#data-error').content.querySelector('.data-error');
 const templateSendErrorAlert = document.querySelector('#error').content.querySelector('.error');
 const templateSendSuccessAlert = document.querySelector('#success').content.querySelector('.success');
+
 const body = document.body;
 
 const getErrorMessage = (message) => {
@@ -12,6 +13,25 @@ const getErrorMessage = (message) => {
   }
 
   body.append(errorArea);
+
+  const errorButton = errorArea.querySelector('.data-error__button');
+
+  const closeAlert = (evt) => {
+    if (isEscapeKey(evt) || evt.target === errorButton) {
+      errorArea.remove();
+      document.removeEventListener('click', closeAlert);
+      document.removeEventListener('keydown', closeAlert);
+    }
+  };
+
+  errorButton.addEventListener('click', () => {
+    errorArea.remove();
+    document.removeEventListener('click', closeAlert);
+    document.removeEventListener('keydown', closeAlert);
+  });
+
+  document.addEventListener('keydown', closeAlert);
+  document.addEventListener('click', closeAlert);
 };
 
 const setupAlert = (template, buttonClass) => {
@@ -20,7 +40,7 @@ const setupAlert = (template, buttonClass) => {
   const buttonAlert = newAlert.querySelector(buttonClass);
 
   const closeAlert = (evt) => {
-    if (isEscapeKey(evt) || evt.target !== newAlert) {
+    if (isEscapeKey(evt) || evt.target === buttonAlert) {
       newAlert.remove();
       document.removeEventListener('keydown', closeAlert);
       document.removeEventListener('click', closeAlert);
@@ -34,13 +54,7 @@ const setupAlert = (template, buttonClass) => {
   });
 
   document.addEventListener('keydown', closeAlert);
-  document.addEventListener('click', (evt) => {
-    if (!evt.target.closest('.body')) {
-      if (document.querySelector('.error')) {
-        closeAlert(evt);
-      }
-    }
-  });
+  document.addEventListener('click', closeAlert);
 };
 
 const sendErrorMessage = () => {
@@ -50,5 +64,31 @@ const sendErrorMessage = () => {
 const sendMessage = () => {
   setupAlert(templateSendSuccessAlert, '.success__button');
 };
+
+function onDocumentKeydown(evt) {
+  if (isEscapeKey(evt)) {
+    evt.preventDefault();
+    document.querySelectorAll('.error').forEach((error) => {
+      error.remove();
+    });
+    document.querySelectorAll('.success').forEach((success) => {
+      success.remove();
+    });
+  }
+}
+
+function onWindowClick(evt) {
+  if (!evt.target.closest('.body')) {
+    document.querySelectorAll('.error').forEach((error) => {
+      error.remove();
+    });
+    document.querySelectorAll('.success').forEach((success) => {
+      success.remove();
+    });
+  }
+}
+
+document.addEventListener('keydown', onDocumentKeydown);
+document.addEventListener('click', onWindowClick);
 
 export { getErrorMessage, sendErrorMessage, sendMessage };
