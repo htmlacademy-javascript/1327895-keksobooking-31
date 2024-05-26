@@ -29,16 +29,23 @@ const configIcon = {
 };
 
 const pinIcon = L.icon({
-  iconUrl:configIcon.url,
+  iconUrl: configIcon.url,
   iconSize: [configIcon.width, configIcon.height],
   iconAnchor: [configIcon.anchorX, configIcon.anchorY],
 });
 
 const pinMainIcon = L.icon({
-  iconUrl:configMainIcon.url,
+  iconUrl: configMainIcon.url,
   iconSize: [configMainIcon.width, configMainIcon.height],
   iconAnchor: [configMainIcon.anchorX, configMainIcon.anchorY],
 });
+
+const pinMarker = (location) => (
+  L.marker(location, {
+    draggable: false,
+    icon: pinIcon,
+  })
+);
 
 const mainPinMarker = L.marker(
   {
@@ -54,6 +61,7 @@ const mainPinMarker = L.marker(
 const adFormAddress = document.querySelector('#address');
 const map = L.map('map-canvas');
 let initialPoints = [];
+
 const renderMap = (points, onMapLoad) => {
   map
     .on('load', () => {
@@ -68,21 +76,13 @@ const renderMap = (points, onMapLoad) => {
   initialPoints = points.slice(0, MAX_COUNT_ADVERTISEMENT);
 
   initialPoints.forEach((data) => {
-    const pinMarker = L.marker({
+    const pinMarkerInstance = pinMarker({
       lat: data.location.lat,
       lng: data.location.lng,
-    },
-    {
-      draggable: false,
-      icon: pinIcon,
     });
 
-    // pinMarker.on('moveend', (evt) => {
-    //   console.log(evt.target.getLatLng());
-    // });
-
     const popup = generatePopup(data);
-    pinMarker.addTo(map).bindPopup(popup);
+    pinMarkerInstance.addTo(map).bindPopup(popup);
   });
 
   adFormAddress.value = `${Object.values(TOKIO_CENTER)[0].toFixed(5)}, ${Object.values(TOKIO_CENTER)[1].toFixed(5)}`;
@@ -101,6 +101,21 @@ const resetPinMarker = (address) => {
   address.value = `${Object.values(TOKIO_CENTER)[0].toFixed(5)}, ${Object.values(TOKIO_CENTER)[1].toFixed(5)}`;
 };
 
+const closePopup = () => {
+  map.closePopup();
+};
 
-export { renderMap, adFormAddress, resetPinMarker };
+const updatePointsMarkers = (points) => {
+  const markerGroup = L.layerGroup().addTo(map);
+  markerGroup.clearLayers();
+  points.slice(0, MAX_COUNT_ADVERTISEMENT).forEach((point) => {
+    const popup = generatePopup(point);
+    const currentPinMarker = pinMarker({
+      lat: point.location.lat,
+      lng: point.location.lng,
+    });
+    currentPinMarker.addTo(markerGroup).bindPopup(popup);
+  });
+};
 
+export { renderMap, adFormAddress, resetPinMarker, closePopup, updatePointsMarkers };

@@ -1,4 +1,4 @@
-import { isEscapeKey } from './utils.js';
+// import { isEscapeKey } from './utils.js';
 import { sendErrorMessage, sendMessage } from './messages.js';
 import { resetPinMarker } from './map.js';
 import { sendData } from './api.js';
@@ -34,9 +34,9 @@ const adFormTimeOut = adForm.querySelector('#timeout');
 const adFormSlider = adForm.querySelector('.ad-form__slider');
 const submitButton = adForm.querySelector('.ad-form__submit');
 
-const mapFilters = document.querySelector('.map__filters');
-const mapFilterElement = mapFilters.querySelectorAll('.map__filter');
-const mapFeature = mapFilters.querySelector('.map__features');
+// const mapFilters = document.querySelector('.map__filters');
+// const mapFilterElement = mapFilters.querySelectorAll('.map__filter');
+// const mapFeatures = mapFilters.querySelector('.map__features');
 
 const inactiveAdForm = () => {
   adForm.classList.add('ad-form--disabled');
@@ -46,28 +46,12 @@ const inactiveAdForm = () => {
   });
 };
 
-const inactiveMap = () => {
-  mapFilters.classList.add('map__filters--disabled');
-  mapFilterElement.forEach((element) => {
-    element.setAttribute('disabled', true);
-  });
-  mapFeature.setAttribute('disabled', true);
-};
-
 const activateAdForm = () => {
   adForm.classList.remove('ad-form--disabled');
   adFormHeader.removeAttribute('disabled');
   adFormElement.forEach((element) => {
     element.removeAttribute('disabled');
   });
-};
-
-const activateMap = () => {
-  mapFilters.classList.remove('map__filters--disabled');
-  mapFilterElement.forEach((element) => {
-    element.removeAttribute('disabled');
-  });
-  mapFeature.removeAttribute('disabled');
 };
 
 const pristine = new Pristine(adForm, {
@@ -212,4 +196,4 @@ const setFormSubmit = () => {
   });
 };
 
-export { inactiveAdForm, inactiveMap, activateAdForm, activateMap, setFormSubmit };
+export { inactiveAdForm, activateAdForm, setFormSubmit };
