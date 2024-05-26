@@ -65,7 +65,7 @@ const sendMessage = () => {
   setupAlert(templateSendSuccessAlert, '.success__button');
 };
 
-function onDocumentKeydown(evt) {
+const onDocumentKeydown = (evt) => {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
     document.querySelectorAll('.error').forEach((error) => {
@@ -75,9 +75,9 @@ function onDocumentKeydown(evt) {
       success.remove();
     });
   }
-}
+};
 
-function onWindowClick(evt) {
+const onWindowClick = (evt) => {
   if (!evt.target.closest('.body')) {
     document.querySelectorAll('.error').forEach((error) => {
       error.remove();
@@ -86,7 +86,7 @@ function onWindowClick(evt) {
       success.remove();
     });
   }
-}
+};
 
 document.addEventListener('keydown', onDocumentKeydown);
 document.addEventListener('click', onWindowClick);
