@@ -3,7 +3,6 @@ import { isEscapeKey } from './utils.js';
 const errorLoadDataTemplate = document.querySelector('#data-error').content.querySelector('.data-error');
 const templateSendErrorAlert = document.querySelector('#error').content.querySelector('.error');
 const templateSendSuccessAlert = document.querySelector('#success').content.querySelector('.success');
-
 const body = document.body;
 
 const getErrorMessage = (message) => {
@@ -35,7 +34,13 @@ const setupAlert = (template, buttonClass) => {
   });
 
   document.addEventListener('keydown', closeAlert);
-  document.addEventListener('click', closeAlert);
+  document.addEventListener('click', (evt) => {
+    if (!evt.target.closest('.body')) {
+      if (document.querySelector('.error')) {
+        closeAlert(evt);
+      }
+    }
+  });
 };
 
 const sendErrorMessage = () => {
