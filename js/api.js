@@ -15,7 +15,7 @@ const ErrorText = {
   [Method.POST]: 'Не удалось отправить данные',
 };
 
-const load = (route, method = Method.GET, errorText, body = null) =>
+const load = (route, method = Method.GET, body = null) =>
   fetch(`${BASE_URL}${route}`, {method, body})
     .then((response) =>
       response.ok ? response.json() : Promise.reject(ErrorText[method]));

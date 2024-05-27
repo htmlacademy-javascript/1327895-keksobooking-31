@@ -1,6 +1,5 @@
-// import { isEscapeKey } from './utils.js';
 import { sendErrorMessage, sendMessage } from './messages.js';
-import { resetPinMarker } from './map.js';
+import { closePopup, resetPinMarker } from './map.js';
 import { sendData } from './api.js';
 
 const MIN_COUNT_TITLE_CHARACTERS = 30;
@@ -33,10 +32,6 @@ const adFormTimeIn = adForm.querySelector('#timein');
 const adFormTimeOut = adForm.querySelector('#timeout');
 const adFormSlider = adForm.querySelector('.ad-form__slider');
 const submitButton = adForm.querySelector('.ad-form__submit');
-
-// const mapFilters = document.querySelector('.map__filters');
-// const mapFilterElement = mapFilters.querySelectorAll('.map__filter');
-// const mapFeatures = mapFilters.querySelector('.map__features');
 
 const inactiveAdForm = () => {
   adForm.classList.add('ad-form--disabled');
@@ -165,6 +160,7 @@ const resetAdForm = () => {
   adForm.reset();
   resetAdFormSlider();
   resetPinMarker();
+  closePopup();
 };
 
 const blockSubmitButton = () => {
@@ -187,8 +183,12 @@ const setFormSubmit = () => {
       sendMessage();
       pristine.reset();
       sendData(new FormData(evt.target))
-        .then(resetAdForm)
-        .catch(sendErrorMessage)
+        .then(() => {
+          resetAdForm();
+        })
+        .catch(() => {
+          sendErrorMessage();
+        })
         .finally(() => {
           unblockSubmitButton();
         });

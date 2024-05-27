@@ -1,4 +1,3 @@
-// import { generateDataPopup } from './data.js';
 import { generatePopup } from './generation-template.js';
 
 const TILE_LAYER = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
@@ -60,9 +59,10 @@ const mainPinMarker = L.marker(
 
 const adFormAddress = document.querySelector('#address');
 const map = L.map('map-canvas');
+const markerGroup = L.layerGroup().addTo(map);
 let initialPoints = [];
 
-const renderMap = (points, onMapLoad) => {
+const initMap = (onMapLoad) => {
   map
     .on('load', () => {
       onMapLoad();
@@ -72,7 +72,10 @@ const renderMap = (points, onMapLoad) => {
   L.tileLayer(TILE_LAYER, {
     attribution: COPYRIGHT,
   }).addTo(map);
+  mainPinMarker.addTo(map);
+};
 
+const renderMap = (points) => {
   initialPoints = points.slice(0, MAX_COUNT_ADVERTISEMENT);
 
   initialPoints.forEach((data) => {
@@ -82,7 +85,7 @@ const renderMap = (points, onMapLoad) => {
     });
 
     const popup = generatePopup(data);
-    pinMarkerInstance.addTo(map).bindPopup(popup);
+    pinMarkerInstance.addTo(markerGroup).bindPopup(popup);
   });
 
   adFormAddress.value = `${Object.values(TOKIO_CENTER)[0].toFixed(5)}, ${Object.values(TOKIO_CENTER)[1].toFixed(5)}`;
@@ -91,22 +94,21 @@ const renderMap = (points, onMapLoad) => {
     const coords = evt.target.getLatLng();
     adFormAddress.value = `${coords.lat.toFixed(5)}, ${coords.lng.toFixed(5)}`;
   });
-
-  mainPinMarker.addTo(map);
-};
-
-const resetPinMarker = (address) => {
-  map.setView(TOKIO_CENTER, ZOOM);
-  mainPinMarker.setLatLng(TOKIO_CENTER);
-  address.value = `${Object.values(TOKIO_CENTER)[0].toFixed(5)}, ${Object.values(TOKIO_CENTER)[1].toFixed(5)}`;
 };
 
 const closePopup = () => {
   map.closePopup();
 };
 
+const resetPinMarker = (address) => {
+  map.setView(TOKIO_CENTER, ZOOM);
+  mainPinMarker.setLatLng(TOKIO_CENTER);
+  address.value = `${Object.values(TOKIO_CENTER)[0].toFixed(5)}, ${Object.values(TOKIO_CENTER)[1].toFixed(5)}`;
+  closePopup();
+};
+
+
 const updatePointsMarkers = (points) => {
-  const markerGroup = L.layerGroup().addTo(map);
   markerGroup.clearLayers();
   points.slice(0, MAX_COUNT_ADVERTISEMENT).forEach((point) => {
     const popup = generatePopup(point);
@@ -118,4 +120,4 @@ const updatePointsMarkers = (points) => {
   });
 };
 
-export { renderMap, adFormAddress, resetPinMarker, closePopup, updatePointsMarkers };
+export { initMap, renderMap, adFormAddress, resetPinMarker, closePopup, updatePointsMarkers };

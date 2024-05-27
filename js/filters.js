@@ -14,8 +14,7 @@ const mapFeatures = mapFilters.querySelector('.map__features');
 const housingTypeSelect = document.querySelector('#housing-type');
 const housingPriceSelect = document.querySelector('#housing-price');
 const housingRoomsSelect = document.querySelector('#housing-rooms');
-const housingGuestsSelect = document.querySelector('#housing-features');
-
+const housingGuestsSelect = document.querySelector('#housing-guests');
 
 const inactiveMap = () => {
   mapFilters.classList.add('map__filters--disabled');

@@ -11,20 +11,30 @@ const loadAndDisplayImage = (inputElement, previewElement) => {
   const fileName = selectedFile.name.toLowerCase();
   const match = FILE_TYPES.some((extension) => fileName.endsWith(extension));
 
-  previewElement.querySelector('img').src = '';
+  previewElement.src = '';
 
   if (match) {
-    previewElement.querySelector('img').src = URL.createObjectURL(selectedFile);
+    previewElement.src = URL.createObjectURL(selectedFile);
   }
+};
+
+const createPhotoContainer = () => {
+  const photoContainer = document.createElement('img');
+  photoContainer.style.width = '100%';
+  photoContainer.style.height = 'auto';
+  photoContainer.src = '';
+  photoContainer.alt = 'Фотография жилья';
+  propertyPhotoPreviewElement.appendChild(photoContainer);
+
+  loadAndDisplayImage(propertyPhotoInputElement, photoContainer);
 };
 
 const setupImageUploadListeners = () => {
   avatarInputElement.addEventListener('change', () => {
     loadAndDisplayImage(avatarInputElement, avatarImageElement);
   });
-  propertyPhotoInputElement.addEventListener('change', () => {
-    loadAndDisplayImage(propertyPhotoInputElement, propertyPhotoPreviewElement);
-  });
+
+  propertyPhotoInputElement.addEventListener('change', createPhotoContainer);
 };
 
 export { setupImageUploadListeners };
