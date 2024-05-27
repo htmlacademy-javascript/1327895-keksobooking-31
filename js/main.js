@@ -1,10 +1,26 @@
-import { generateArray } from './data.js';
-import { generatePopup } from './generation-template.js';
-import { inactiveAdForm, inactiveMap, activateAdForm, activateMap } from './form.js';
+import { inactiveAdForm, activateAdForm, setFormSubmit } from './form.js';
+import { initMap, renderMap } from './map.js';
+import { getData } from './api.js';
+import { getErrorMessage } from './messages.js';
+import { inactiveMap, activateMap, applyHousingFilter } from './filters.js';
+import { debounce } from './utils.js';
+import { setupImageUploadListeners } from './loading-photo.js';
 
-generatePopup(generateArray()[0]);
 inactiveAdForm();
 inactiveMap();
-activateAdForm();
-activateMap();
+initMap(activateAdForm);
 
+const bootstrappApp = async () => {
+  try {
+    const popups = await getData();
+    activateMap();
+    renderMap(popups);
+    applyHousingFilter(popups, debounce);
+    setFormSubmit();
+    setupImageUploadListeners();
+  } catch (error) {
+    getErrorMessage(error.message);
+  }
+};
+
+bootstrappApp();

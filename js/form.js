@@ -1,6 +1,11 @@
+import { sendErrorMessage, sendMessage } from './messages.js';
+import { closePopup, resetPinMarker } from './map.js';
+import { sendData } from './api.js';
+
 const MIN_COUNT_TITLE_CHARACTERS = 30;
 const MAX_COUNT_TITLE_CHARACTERS = 100;
 const MAX_PRICE = 100000;
+const MIN_PRICE = 0;
 
 const MIN_PRICE_RESIDENCY = {
   'bungalow': 0,
@@ -10,21 +15,23 @@ const MIN_PRICE_RESIDENCY = {
   'palace': 10000,
 };
 
+const SubmitButtonText = {
+  IDLE: 'Опубликовать',
+  SENDING: 'Публикую...'
+};
+
 const adForm = document.querySelector('.ad-form');
 const adFormHeader = adForm.querySelector('.ad-form-header');
 const adFormElement = adForm.querySelectorAll('.ad-form__element');
-
-const mapFilters = document.querySelector('.map__filters');
-const mapFilterElement = mapFilters.querySelectorAll('.map__filter');
-const mapFeature = mapFilters.querySelector('.map__features');
-
-const adFormTitle = document.querySelector('#title');
-const adFormPrice = document.querySelector('#price');
-const adFormRoomNumber = document.querySelector('#room_number');
-const adFormCapacity = document.querySelector('#capacity');
-const adFormHousingType = document.querySelector('#type');
-const adFormTimeIn = document.querySelector('#timein');
-const adFormTimeOut = document.querySelector('#timeout');
+const adFormTitle = adForm.querySelector('#title');
+const adFormPrice = adForm.querySelector('#price');
+const adFormRoomNumber = adForm.querySelector('#room_number');
+const adFormCapacity = adForm.querySelector('#capacity');
+const adFormHousingType = adForm.querySelector('#type');
+const adFormTimeIn = adForm.querySelector('#timein');
+const adFormTimeOut = adForm.querySelector('#timeout');
+const adFormSlider = adForm.querySelector('.ad-form__slider');
+const submitButton = adForm.querySelector('.ad-form__submit');
 
 const inactiveAdForm = () => {
   adForm.classList.add('ad-form--disabled');
@@ -34,28 +41,12 @@ const inactiveAdForm = () => {
   });
 };
 
-const inactiveMap = () => {
-  mapFilters.classList.add('map__filters--disabled');
-  mapFilterElement.forEach((element) => {
-    element.setAttribute('disabled', true);
-  });
-  mapFeature.setAttribute('disabled', true);
-};
-
 const activateAdForm = () => {
   adForm.classList.remove('ad-form--disabled');
-  adFormHeader.removeAttribute('disabled', true);
+  adFormHeader.removeAttribute('disabled');
   adFormElement.forEach((element) => {
-    element.removeAttribute('disabled', true);
+    element.removeAttribute('disabled');
   });
-};
-
-const activateMap = () => {
-  mapFilters.classList.remove('map__filters--disabled');
-  mapFilterElement.forEach((element) => {
-    element.removeAttribute('disabled', true);
-  });
-  mapFeature.removeAttribute('disabled', true);
 };
 
 const pristine = new Pristine(adForm, {
@@ -73,7 +64,6 @@ pristine.addValidator(adFormTitle, isValidTitle, `Введите от ${MIN_COUN
 let errorMessage = '';
 
 const isValidPrice = (value) => {
-
   if (value > MAX_PRICE) {
     errorMessage = `Максимальная цена не более ${MAX_PRICE}`;
     return false;
@@ -86,7 +76,7 @@ const isValidPrice = (value) => {
   return true;
 };
 
-pristine.addValidator(adFormPrice, isValidPrice, errorMessage);
+pristine.addValidator(adFormPrice, isValidPrice, () => errorMessage);
 
 const onChangeHousingType = () => {
   adFormPrice.placeholder = MIN_PRICE_RESIDENCY[adFormHousingType.value];
@@ -100,7 +90,7 @@ const isValidRoomNumber = (value) => {
     case '1':
       return adFormCapacity.value === '1';
     case '2':
-      return adFormCapacity.value === '2' || adFormCapacity.value === '1' ;
+      return adFormCapacity.value === '2' || adFormCapacity.value === '1';
     case '3':
       return adFormCapacity.value === '3' || adFormCapacity.value === '2' || adFormCapacity.value === '1';
     case '100':
@@ -131,17 +121,79 @@ adFormTimeOut.addEventListener('change', () => {
   adFormTimeIn.value = adFormTimeOut.value;
 });
 
-adForm.addEventListener('submit', (evt) => {
-  evt.preventDefault();
-  const isValid = pristine.validate();
-
-  if (isValid) {
-    evt.preventDefault();
-    inactiveAdForm();
-    inactiveMap();
-  } else {
-    return activateAdForm(), activateMap();
+noUiSlider.create(adFormSlider, {
+  range: {
+    min: MIN_PRICE,
+    max: MAX_PRICE,
+  },
+  start: 0,
+  step: 1,
+  connect: 'lower',
+  format: {
+    to: (value) => value.toFixed(0),
+    from: (value) => parseFloat(value),
   }
 });
 
-export { inactiveAdForm, inactiveMap, activateAdForm, activateMap };
+adFormSlider.noUiSlider.on('slide', () => {
+  adFormPrice.value = adFormSlider.noUiSlider.get();
+  pristine.validate(adFormPrice);
+});
+
+adFormPrice.addEventListener('input', (evt) => {
+  adFormSlider.noUiSlider.set(evt.target.value);
+  pristine.validate(adFormPrice);
+});
+
+adFormPrice.addEventListener('change', (evt) => {
+  if (evt.target.value > MAX_PRICE) {
+    adFormSlider.noUiSlider.reset();
+  }
+  adFormSlider.noUiSlider.set(evt.target.value);
+});
+
+const resetAdFormSlider = () => {
+  adFormSlider.noUiSlider.set(MIN_PRICE);
+};
+
+const resetAdForm = () => {
+  adForm.reset();
+  resetAdFormSlider();
+  resetPinMarker();
+  closePopup();
+};
+
+const blockSubmitButton = () => {
+  submitButton.disabled = true;
+  submitButton.textContent = SubmitButtonText.SENDING;
+};
+
+const unblockSubmitButton = () => {
+  submitButton.disabled = false;
+  submitButton.textContent = SubmitButtonText.IDLE;
+};
+
+const setFormSubmit = () => {
+  adForm.addEventListener('submit', (evt) => {
+    evt.preventDefault();
+
+    const isValid = pristine.validate();
+    if (isValid) {
+      blockSubmitButton();
+      sendMessage();
+      pristine.reset();
+      sendData(new FormData(evt.target))
+        .then(() => {
+          resetAdForm();
+        })
+        .catch(() => {
+          sendErrorMessage();
+        })
+        .finally(() => {
+          unblockSubmitButton();
+        });
+    }
+  });
+};
+
+export { inactiveAdForm, activateAdForm, setFormSubmit };

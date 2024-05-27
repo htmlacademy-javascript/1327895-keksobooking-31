@@ -1,5 +1,4 @@
 const temlateCard = document.querySelector('#card').content.querySelector('.popup');
-const mapCanvas = document.querySelector('#map-canvas');
 
 const housingLabels = {
   flat: 'Квартира',
@@ -51,8 +50,11 @@ const generatePopup = ({author, offer}) => {
   capacityElement.textContent = `${offer.rooms} комнаты для ${offer.guests} гостей`;
   timeElement.textContent = `Заезд после ${offer.checkin}, выезд до ${offer.checkout}`;
 
+
   featuresList.innerHTML = '';
-  renderFeatures(featuresList, offer.features);
+  if(offer.features) {
+    renderFeatures(featuresList, offer.features);
+  }
 
   descriptionElement.innerHTML = '';
   if (offer.description) {
@@ -63,7 +65,7 @@ const generatePopup = ({author, offer}) => {
 
   photosElement.innerHTML = '';
 
-  offer.photos.forEach((photo) => {
+  offer.photos?.forEach((photo) => {
     const photoClone = photoElement.cloneNode(true);
     photoClone.src = photo;
     photosElement.appendChild(photoClone);
@@ -73,7 +75,7 @@ const generatePopup = ({author, offer}) => {
 
   popupFragment.appendChild(popupElement);
 
-  mapCanvas.appendChild(popupFragment);
+  return popupFragment;
 };
 
 export { generatePopup };
